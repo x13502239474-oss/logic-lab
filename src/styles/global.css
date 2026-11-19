@@ -660,6 +660,138 @@ input.input {
 .fade-in { animation: fade .28s ease both; }
 @keyframes fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
+/* ============================================================
+   课程可视化图块：论证树 / 推理流程 / 概念关系 / 双栏对比
+   ============================================================ */
+
+.fig {
+  margin: 22px 0;
+  background: var(--paper-2);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 14px 14px 16px;
+}
+.fig-cap {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--graphite-2);
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--rule);
+}
+
+/* —— 论证树 —— */
+.fig-tree { display: flex; flex-direction: column; align-items: center; }
+.tree-root {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--paper-2);
+  background: var(--ink);
+  padding: 7px 15px;
+  border-radius: 2px;
+  text-align: center;
+  max-width: 92%;
+}
+.tree-branch {
+  list-style: none;
+  margin: 0;
+  padding: 18px 0 0;
+  display: flex;
+  gap: 8px 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+}
+.tree-branch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 14px;
+  background: var(--rule);
+}
+.tree-item { position: relative; padding-top: 14px; }
+.tree-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: 14px;
+  background: var(--rule);
+}
+.tree-node {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 6px 11px;
+  text-align: center;
+  max-width: 230px;
+}
+
+/* —— 推理流程图 —— */
+.fig-flow-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.fig-flow { display: flex; align-items: center; min-width: max-content; padding-bottom: 4px; }
+.flow-cell { display: flex; align-items: center; }
+.flow-step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--rule);
+  background: var(--paper);
+  border-radius: 2px;
+  padding: 8px 11px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 190px;
+}
+.flow-step.end { background: var(--ink); color: var(--paper-2); border-color: var(--ink); }
+.flow-idx { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.06em; color: var(--copper); flex-shrink: 0; }
+.flow-step.end .flow-idx { color: var(--rule); }
+.flow-arrow { color: var(--graphite-2); padding: 0 6px; font-size: 13px; }
+
+/* —— 概念关系图 —— */
+.fig-graph-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.fig-graph { display: block; width: 100%; min-width: 500px; height: auto; }
+.graph-node { font-family: var(--font-ui); font-size: 13px; fill: var(--ink); }
+.graph-node.on { fill: var(--paper-2); }
+.graph-rel { font-family: var(--font-ui); font-size: 11px; fill: var(--graphite-2); }
+
+/* —— 双栏对比 —— */
+.fig-versus { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 540px) { .fig-versus { grid-template-columns: 1fr; } }
+.versus-card { border: 1px solid var(--rule); border-radius: 2px; padding: 11px 12px; background: var(--paper); }
+.versus-card.good { border-left: 3px solid var(--ok); }
+.versus-card.bad { border-left: 3px solid var(--bad); }
+.versus-card.mid { border-left: 3px solid var(--copper); }
+.versus-head { display: flex; align-items: baseline; gap: 7px; margin-bottom: 7px; flex-wrap: wrap; }
+.versus-tag { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.1em; padding: 2px 5px; border-radius: 2px; white-space: nowrap; }
+.versus-card.good .versus-tag { background: rgba(63, 91, 70, 0.12); color: var(--ok); }
+.versus-card.bad .versus-tag { background: rgba(139, 58, 47, 0.12); color: var(--bad); }
+.versus-card.mid .versus-tag,
+.versus-tag.mid { background: rgba(150, 112, 60, 0.13); color: var(--copper); }
+.versus-title { font-family: var(--font-serif); font-size: 14px; color: var(--ink); }
+.versus-form {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink-2);
+  background: var(--paper-3);
+  padding: 6px 8px;
+  border-radius: 2px;
+  margin-bottom: 7px;
+  overflow-x: auto;
+}
+.versus-note { font-size: 12.5px; line-height: 1.7; color: var(--graphite); }
+
 .nw { white-space: nowrap; }
 .katex { font-size: 1.02em; }
 .katex-display { margin: 0; }

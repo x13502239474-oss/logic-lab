@@ -244,6 +244,85 @@ export const KG_LAYERS: KGLayer[] = [
       },
     ],
   },
+
+  {
+    title: 'Ⅶ 综合：批判性思维',
+    note: '把前面所有工具合成一套可执行的评审流程：摘主张、验证据、挖假设、量强度、造反例、组织反驳。',
+    nodes: [
+      {
+        id: 'claim', label: '主张', stage: 7, lessonId: 's7-01',
+        desc: '一个人希望你接受的那句话。先摘出主张，审查才有对象。',
+        pre: ['argument'], post: ['evidence', 'assumption'],
+        drills: ['s7-01', 's7-02'],
+      },
+      {
+        id: 'evidence', label: '证据', stage: 7, lessonId: 's7-03',
+        desc: '支持主张的材料。按直接性、可复核性、代表性、独立性四维分档。',
+        pre: ['claim'], post: ['argstrength', 'source'],
+        drills: ['s7-03', 's7-02'],
+      },
+      {
+        id: 'assumption', label: '隐含假设', stage: 7, lessonId: 's7-04',
+        desc: '论证必需但未说出的前提。用否定测试找出来，分事实与规范两类。',
+        pre: ['claim'], post: ['rebuttal'],
+        drills: ['s7-04'],
+      },
+      {
+        id: 'argstrength', label: '论证强度', stage: 7, lessonId: 's7-05',
+        desc: '前提对结论的支持力度。演绎是二值，归纳是连续带，结论不能重于证据。',
+        pre: ['evidence', 'strength'], post: ['overclaim'],
+        drills: ['s7-05'],
+      },
+      {
+        id: 'overclaim', label: '过度断言', stage: 7, lessonId: 's7-05',
+        desc: '用弱证据支撑强结论，是日常论证最常见的失误。',
+        pre: ['argstrength'], post: [],
+        drills: ['s7-05', 's7-09'],
+      },
+      {
+        id: 'counterexample', label: '反例', stage: 7, lessonId: 's7-06',
+        desc: '满足全部前提却使结论为假的实例。能一击驳倒全称命题，驳不倒统计概括。',
+        pre: ['validity', 'relevance'], post: ['rebuttal'],
+        drills: ['s7-06'],
+      },
+      {
+        id: 'rebuttal', label: '反驳与回应', stage: 7, lessonId: 's7-07',
+        desc: '在前提、推理、假设、结论强度四个落点上攻击；先做钢铁人，再动手。',
+        pre: ['assumption', 'counterexample'], post: ['review'],
+        drills: ['s7-07'],
+      },
+      {
+        id: 'source', label: '信源层级', stage: 7, lessonId: 's7-08',
+        desc: '一手文件、机构通报、署名报道、转载、匿名，采信度依次递减。',
+        pre: ['evidence'], post: ['data'],
+        drills: ['s7-08'],
+      },
+      {
+        id: 'data', label: '数据素养', stage: 7, lessonId: 's7-09',
+        desc: '三问基数、样本、口径；警惕平均数掩盖分布与相关冒充因果。',
+        pre: ['evidence', 'probability'], post: ['review'],
+        drills: ['s7-09', 's7-08'],
+      },
+      {
+        id: 'decompose', label: '问题拆解', stage: 7, lessonId: 's7-10',
+        desc: '按事实、价值、程序、主体四层拆成可独立判定的子问题。',
+        pre: ['argument'], post: ['review'],
+        drills: ['s7-10'],
+      },
+      {
+        id: 'reconstruct', label: '论证重构', stage: 7, lessonId: 's7-11',
+        desc: '删冗余、补省略前提、统一术语、编号画图，让论证可被逐项审查。',
+        pre: ['argument', 'claim'], post: ['review'],
+        drills: ['s7-11'],
+      },
+      {
+        id: 'review', label: '综合评审', stage: 7, lessonId: 's7-12',
+        desc: '读、拆、检、评、驳、写六步，输出带依据与建议的书面意见。',
+        pre: ['rebuttal', 'data', 'decompose', 'reconstruct'], post: [],
+        drills: ['s7-12'],
+      },
+    ],
+  },
 ]
 
 export const KG_NODES = KG_LAYERS.flatMap(l => l.nodes)

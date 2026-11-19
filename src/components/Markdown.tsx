@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react'
 import katex from 'katex'
+import { ArgTree, Flow, Graph, Versus } from './Figures'
 
 export function Math({ tex, display = false }: { tex: string; display?: boolean }) {
   const html = useMemo(() => {
@@ -55,6 +56,7 @@ type Block =
   | { t: 'quote'; text: string }
   | { t: 'formula'; tex: string }
   | { t: 'table'; head: string[]; rows: string[][] }
+  | { t: 'tree' | 'flow' | 'graph' | 'versus'; lines: string[]; caption?: string; mode?: string }
   | { t: 'hr' }
 
 function parse(src: string): Block[] {
@@ -65,6 +67,24 @@ function parse(src: string): Block[] {
     const line = lines[i]
     if (!line.trim()) { i++; continue }
 
+    // 自定义可视化图块：:::tree / :::flow / :::graph / :::versus
+    // 写法：:::tree 可选标题\n<若干行内容>\n:::
+    if (line.trim().startsWith(':::')) {
+      const head = line.trim().replace(/^:::+/, '').trim()
+      const [kindRaw, ...rest] = head.split(/\s+/)
+      // versus 支持可选中性模式：:::versus neutral 标题
+      const mode = kindRaw === 'versus' && (rest[0] === 'neutral' || rest[0] === 'ranked')
+        ? rest.shift()
+        : undefined
+      const buf: string[] = []
+      i++
+      while (i < lines.length && !lines[i].trim().startsWith(':::')) { buf.push(lines[i]); i++ }
+      i++ // 跳过结束标记
+      if (kindRaw === 'tree' || kindRaw === 'flow' || kindRaw === 'graph' || kindRaw === 'versus') {
+        blocks.push({ t: kindRaw, lines: buf, caption: rest.join(' ').trim() || undefined, mode })
+      }
+      continue
+    }
     if (line.trim().startsWith('```')) {
       const buf: string[] = []
       i++
@@ -125,7 +145,7 @@ function parse(src: string): Block[] {
     if (/^-{3,}$/.test(line.trim())) { blocks.push({ t: 'hr' }); i++; continue }
 
     const buf: string[] = []
-    while (i < lines.length && lines[i].trim() && !/^(#{2,4}\s|```|\$\$|\||>|-\s|\*\s|\d+[.、]\s)/.test(lines[i].trim())) {
+    while (i < lines.length && lines[i].trim() && !/^(#{2,4}\s|```|:::|\$\$|\||>|-\s|\*\s|\d+[.、]\s)/.test(lines[i].trim())) {
       buf.push(lines[i].trim()); i++
     }
     if (buf.length) blocks.push({ t: 'p', text: buf.join(' ') })
@@ -180,6 +200,14 @@ export function Markdown({ text }: { text: string }) {
                 </table>
               </div>
             )
+          case 'tree':
+            return <ArgTree key={idx} lines={b.lines} caption={b.caption} />
+          case 'flow':
+            return <Flow key={idx} lines={b.lines} caption={b.caption} />
+          case 'graph':
+            return <Graph key={idx} lines={b.lines} caption={b.caption} />
+          case 'versus':
+            return <Versus key={idx} lines={b.lines} caption={b.caption} mode={b.mode} />
           case 'hr':
             return <hr key={idx} />
         }

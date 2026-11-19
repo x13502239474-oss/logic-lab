@@ -17,7 +17,8 @@ export default function Courses() {
         <span className="eyebrow">Curriculum</span>
         <h1>课程体系</h1>
         <p className="lede">
-          六个阶段，{TOTAL_LESSONS} 课，按《{BOOK.title}》{BOOK.edition}的三篇十四章逐节展开。
+          {STAGES.length} 个阶段，{TOTAL_LESSONS} 课。前六阶段按《{BOOK.title}》{BOOK.edition}的三篇十四章逐节展开；
+          第七阶段按批判性思维的能力目标自主编排，补齐主张与证据、证据分级、隐含假设、反驳与媒体数据素养这条线。
           每课含导入、定义、理论、例题、反例、应用与五道习题。
         </p>
       </div>

@@ -6,6 +6,7 @@ import { s3 } from './lessons/s3'
 import { s4 } from './lessons/s4'
 import { s5 } from './lessons/s5'
 import { s6 } from './lessons/s6'
+import { s7 } from './lessons/s7'
 
 export const BOOK = {
   title: '逻辑学导论',
@@ -58,9 +59,16 @@ export const STAGE_META = [
     chapters: '第 4 章',
     summary: '把前五个阶段的工具合成一张谬误地图：相干谬误、不当归纳、预设谬误、含混谬误，逐一拆解并学会反驳。',
   },
+  {
+    id: 7,
+    title: '批判性思维',
+    en: 'Critical Thinking',
+    chapters: 'CT-1 至 CT-12（按能力目标自主编排）',
+    summary: '从「能看出谬误」进阶到「能独立评审一套论证」：分辨主张与证据、给证据分档、挖出隐含假设、构造反例、组织反驳，并拆解媒体、数据与复杂现实议题。',
+  },
 ]
 
-const RAW: Lesson[][] = [s1, s2, s3, s4, s5, s6].map(list =>
+const RAW: Lesson[][] = [s1, s2, s3, s4, s5, s6, s7].map(list =>
   list.map(l => ({ ...l, quiz: l.quiz.map(normalizeQuiz) }))
 )
 
