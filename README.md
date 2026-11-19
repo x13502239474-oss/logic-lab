@@ -32,6 +32,14 @@ cd /tmp/ghp && git init -q && git add -A && git commit -qm "deploy" \
   && git push -f https://github.com/x13502239474-oss/logic-lab.git HEAD:gh-pages
 ```
 
+如果本机无法直连 github.com（企业代理、校园网常见），可以改用 REST 接口发布：
+
+```bash
+GH_TOKEN=<你的令牌> python deploy/publish_ghpages.py
+```
+
+脚本会把 `dist/` 逐文件上传为一个新的提交并更新 `gh-pages` 分支，只需 `repo` 权限。
+
 想改用 GitHub Actions 自动构建，把 `deploy/github-actions.example.yml` 放回 `.github/workflows/deploy.yml`，
 仓库 Settings → Pages → Source 选 **GitHub Actions** 即可。注意：推送 workflow 文件要求令牌带 `workflow` 权限。
 
