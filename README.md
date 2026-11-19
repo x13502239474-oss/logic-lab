@@ -1,7 +1,9 @@
 # LOGIC LAB · 逻辑学研究所
 
 以《逻辑学导论》（第 15 版，柯匹 / 科恩 / 罗迪奇）为骨架的移动端逻辑学自学系统。
-七个阶段、84 课、420 道习题、七个可交互的逻辑工具、18 条谬误图鉴、16 个现实论证案例。
+七个阶段、84 课、420 道习题、正文约 22 万字、七个可交互的逻辑工具、18 条谬误图鉴、16 个现实论证案例。
+
+每课按统一结构编写：背景与意义 → 核心定义 → 理论讲解 → 例题与分析 → 反例训练 → 现实应用 → 本节总结，配 5 道练习与四段式解析。
 
 ## 快速开始
 
@@ -18,30 +20,30 @@ Node 版本 ≥ 18。
 
 线上地址：<https://x13502239474-oss.github.io/logic-lab/>
 
-采用「源码分支 + 产物分支」：
+采用「main 源码 + GitHub Actions 自动构建」：
 
-- `main`：源码（不含 `dist/`）
-- `gh-pages`：构建产物，GitHub Pages 从这里发布
+- `main`：源码（不含 `dist/`），每次提交自动触发构建
+- `.github/workflows/deploy.yml` 负责 `npm ci → npm run build → 发布 Pages`（Pages 的 `build_type` 为 `workflow`）
 
-更新流程：
+日常更新只需提交源码，构建交给 Actions。
 
-```bash
-npm run build
-rm -rf /tmp/ghp && cp -r dist /tmp/ghp && touch /tmp/ghp/.nojekyll
-cd /tmp/ghp && git init -q && git add -A && git commit -qm "deploy" \
-  && git push -f https://github.com/x13502239474-oss/logic-lab.git HEAD:gh-pages
-```
-
-如果本机无法直连 github.com（企业代理、校园网常见），可以改用 REST 接口发布：
+本机若无法直连 github.com（企业代理、校园网常见），用 REST 接口提交源码：
 
 ```bash
-GH_TOKEN=<你的令牌> python deploy/publish_ghpages.py
+GITHUB_TOKEN=<令牌> python deploy/push_source.py "提交说明"
+# 只提交部分文件时，后面追加路径参数
+GITHUB_TOKEN=<令牌> python deploy/push_source.py "提交说明" README.md src/data/lessons/s7.ts
 ```
 
-脚本会把 `dist/` 逐文件上传为一个新的提交并更新 `gh-pages` 分支，只需 `repo` 权限。
+脚本走 Git Data API（blobs → tree → commit → 更新 ref），只需 `repo` 权限；提交后自动触发 Actions。
 
-想改用 GitHub Actions 自动构建，把 `deploy/github-actions.example.yml` 放回 `.github/workflows/deploy.yml`，
-仓库 Settings → Pages → Source 选 **GitHub Actions** 即可。注意：推送 workflow 文件要求令牌带 `workflow` 权限。
+备用发布方式（不依赖 Actions，直接推产物分支）：
+
+```bash
+GH_TOKEN=<令牌> python deploy/publish_ghpages.py
+```
+
+脚本把 `dist/` 逐文件上传为 `gh-pages` 上的新提交。
 
 `vite.config.ts` 里 `base: './'`，路由用 HashRouter，因此放在任何子路径下都能直接打开。
 
@@ -64,11 +66,49 @@ src/
 │  ├─ fallacies.ts      18 条谬误
 │  ├─ daily.ts          每日挑战、快速推理、拆解、侦探、写作题
 │  └─ graph.ts          知识图谱节点与依赖
+├─ components/           Markdown 渲染器、Figures 内联 SVG 图块、题目卡片
 ├─ lab/                 实验室七个工具
 ├─ pages/               首页 / 课程 / 课程详情 / 实验室 / 错题本 / 我的 / 训练 / 案例 / 图谱 / 谬误
 ├─ store/db.ts          LocalStorage 数据层（进度、答题、错题、笔记、档案、时长）
 └─ styles/global.css    设计系统
 ```
+
+## 课程结构规范
+
+每课固定七节，顺序不可调换：
+
+1. **背景与意义**——这个概念为什么会出现、解决了什么问题
+2. **核心定义**——专业定义 + 通俗解释 + 关键术语
+3. **理论讲解**——机制、形式结构、可照做的步骤
+4. **例题与分析**——由易到难，含正误对比图块
+5. **反例训练**——有缺陷的版本 + 错在哪里
+6. **现实应用**——真实场景里的用法
+7. **本节总结**——要点回扣
+
+每课配 5 道练习（单选 / 多选 / 判断 / 简答），解析统一四段式：答案 → 解题思路 → 逐步演示 → 易错提醒。
+
+正文支持四种内联 SVG 图块，零外部依赖：
+
+| 语法 | 用途 |
+|---|---|
+| `:::tree` | 论证树，结论在上、前提在下 |
+| `:::flow` | 推理流程图，编号步骤 + 箭头 |
+| `:::graph` | 概念关系图，节点 + 关系边 |
+| `:::versus` | 正误对比卡，行首 `+` / `-` 标注对错 |
+
+`:::versus neutral` 用于并列分类（如演绎 vs 归纳），两侧按中性样式渲染，不暗示好坏。
+
+### 校验脚本
+
+```bash
+npx tsx scripts/logic.test.ts    # 逻辑引擎 38 项
+npx tsx scripts/figures.test.ts  # 图块解析 20 项
+npx tsx scripts/validate.ts      # 课程结构、题库合法性
+npx tsx scripts/crosscheck.ts    # 跨文件引用有效性
+npx tsx scripts/standards.ts     # 九条教学标准覆盖审计（--detail 看逐课缺口）
+```
+
+`standards.ts` 按九项标准逐课打分：定义、背景与意义、形式结构、示例≥2、正误对比、常见误区、练习≥5、每题解析、可视化图块。
 
 ## 课程与教材对应
 

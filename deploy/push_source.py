@@ -33,6 +33,8 @@ DEFAULT_FILES = [
     'src/pages/Courses.tsx',
     'src/styles/global.css',
     'scripts/figures.test.ts',
+    'scripts/validate.ts',
+    'scripts/standards.ts',
     'deploy/push_source.py',
     'deploy/publish_ghpages.py',
 ]

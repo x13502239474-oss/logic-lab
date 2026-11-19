@@ -15,7 +15,11 @@ for (const l of ALL_LESSONS) {
   for (const r of REQ) {
     if (!heads.some(h => h.includes(r))) problems.push(`${l.id} 缺少小节：${r}`)
   }
-  if (heads.length !== 6) problems.push(`${l.id} 小节数为 ${heads.length}（应为 6）：${heads.join(' / ')}`)
+  if (heads.length !== 6 && heads.length !== 7) problems.push(`${l.id} 小节数为 ${heads.length}（应为 6 或 7）：${heads.join(' / ')}`)
+  // 允许两种标准序列：六节基本式，或加「背景与意义」的七节式（必须置于首位）
+  const seq = heads.map(h => (h === '背景与意义' ? '背景与意义' : REQ.find(r => h.includes(r)) ?? h)).join('|')
+  const okSeq = seq === REQ.join('|') || seq === ['背景与意义', ...REQ].join('|')
+  if (!okSeq) problems.push(`${l.id} 小节顺序不符：${heads.join(' / ')}`)
   if (l.body.includes('\t')) problems.push(`${l.id} 正文含制表符（LaTeX 反斜杠被吞）`)
   if ((l.body.split('$').length - 1) % 2 !== 0) problems.push(`${l.id} 正文 $ 数量为奇数`)
   if (!l.lead || l.lead.length < 20) problems.push(`${l.id} 导入过短`)
