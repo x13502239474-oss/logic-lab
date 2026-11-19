@@ -16,14 +16,26 @@ Node 版本 ≥ 18。
 
 ## 部署
 
-### GitHub Pages
+线上地址：<https://x13502239474-oss.github.io/logic-lab/>
 
-1. 把整个项目推到仓库。
-2. 仓库 Settings → Pages → Source 选 **GitHub Actions**。
-3. 推送到 `main` 后，仓库自带的 `.github/workflows/deploy.yml` 会自动构建并发布。
-4. 访问 `https://<用户名>.github.io/<仓库名>/`。
+采用「源码分支 + 产物分支」：
 
-`vite.config.ts` 里 `base: './'`，路由用 HashRouter，因此放在任何子路径下都能直接打开，不需要额外配置。
+- `main`：源码（不含 `dist/`）
+- `gh-pages`：构建产物，GitHub Pages 从这里发布
+
+更新流程：
+
+```bash
+npm run build
+rm -rf /tmp/ghp && cp -r dist /tmp/ghp && touch /tmp/ghp/.nojekyll
+cd /tmp/ghp && git init -q && git add -A && git commit -qm "deploy" \
+  && git push -f https://github.com/x13502239474-oss/logic-lab.git HEAD:gh-pages
+```
+
+想改用 GitHub Actions 自动构建，把 `deploy/github-actions.example.yml` 放回 `.github/workflows/deploy.yml`，
+仓库 Settings → Pages → Source 选 **GitHub Actions** 即可。注意：推送 workflow 文件要求令牌带 `workflow` 权限。
+
+`vite.config.ts` 里 `base: './'`，路由用 HashRouter，因此放在任何子路径下都能直接打开。
 
 ### 其他静态托管
 
